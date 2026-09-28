@@ -815,12 +815,12 @@
       <p class="section-eyebrow">songs that mean something</p>
       <h2>Our playlist</h2>
       <div class="playlist-list">
-        <div class="track"><span class="track-num">01</span><div class="track-info"><div class="track-title">Mi Amor — Sharn and The Paul</div><audio class="track-audio" controls preload="none" src="songs/mi-amor.mp3"></audio></div></div>
-        <div class="track"><span class="track-num">02</span><div class="track-info"><div class="track-title">Kiss It Better — Rihanna</div><audio class="track-audio" controls preload="none" src="songs/kiss-it-better.mp3"></audio></div></div>
-        <div class="track"><span class="track-num">03</span><div class="track-info"><div class="track-title">Janiye — Vishal Mishra</div><audio class="track-audio" controls preload="none" src="songs/janiye.mp3"></audio></div></div>
-        <div class="track"><span class="track-num">04</span><div class="track-info"><div class="track-title">The Night We Met — Lord Huron</div><audio class="track-audio" controls preload="none" src="songs/the-night-we-met.mp3"></audio></div></div>
-        <div class="track"><span class="track-num">05</span><div class="track-info"><div class="track-title">Perfect — Ed Sheeran</div><audio class="track-audio" controls preload="none" src="songs/perfect.mp3"></audio></div></div>
-        <div class="track"><span class="track-num">06</span><div class="track-info"><div class="track-title">Tum Hi Ho — Arijit Singh</div><audio class="track-audio" controls preload="none" src="songs/tum-hi-ho.mp3"></audio></div></div>
+        <div class="track"><span class="track-num">01</span><div class="track-info"><div class="track-title">Mi Amor — Sharn and The Paul</div><audio class="track-audio" controls preload="none" src="mi-amor.mp3"></audio></div></div>
+        <div class="track"><span class="track-num">02</span><div class="track-info"><div class="track-title">Kiss It Better — Rihanna</div><audio class="track-audio" controls preload="none" src="kiss-it-better.mp3"></audio></div></div>
+        <div class="track"><span class="track-num">03</span><div class="track-info"><div class="track-title">Janiye — Vishal Mishra</div><audio class="track-audio" controls preload="none" src="janiye.mp3"></audio></div></div>
+        <div class="track"><span class="track-num">04</span><div class="track-info"><div class="track-title">The Night We Met — Lord Huron</div><audio class="track-audio" controls preload="none" src="the-night-we-met.mp3"></audio></div></div>
+        <div class="track"><span class="track-num">05</span><div class="track-info"><div class="track-title">Perfect — Ed Sheeran</div><audio class="track-audio" controls preload="none" src="perfect.mp3"></audio></div></div>
+        <div class="track"><span class="track-num">06</span><div class="track-info"><div class="track-title">Tum Hi Ho — Arijit Singh</div><audio class="track-audio" controls preload="none" src="tum-hi-ho.mp3"></audio></div></div>
       </div>
     </section>
   </div>
@@ -970,6 +970,18 @@
     }
     allTriggers.forEach(el => {
       el.addEventListener('click', () => goToPage(el.dataset.page));
+    });
+
+
+    /* Safety net: if a song can't load from one path, try the other (root vs songs/ folder) */
+    document.querySelectorAll('audio.track-audio').forEach(function (a) {
+      var tried = false;
+      a.addEventListener('error', function () {
+        if (tried) return; tried = true;
+        var s = a.getAttribute('src') || '';
+        a.src = s.indexOf('songs/') === 0 ? s.replace('songs/', '') : 'songs/' + s;
+        a.load();
+      });
     });
 
     /* ---- Spin wheel ---- */
